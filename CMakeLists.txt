@@ -33,6 +33,10 @@ project(rpi-pico-library-test C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
+# Custom libraries (as submodules)
+add_subdirectory(libs/ssd1306)
+add_subdirectory(libs/ds3231)
+
 # Add executable. Default name is the project name, version 0.1
 
 add_executable(rpi-pico-library-test rpi-pico-library-test.c )
@@ -42,11 +46,14 @@ pico_set_program_version(rpi-pico-library-test "0.1")
 
 # Modify the below lines to enable/disable output over UART/USB
 pico_enable_stdio_uart(rpi-pico-library-test 0)
-pico_enable_stdio_usb(rpi-pico-library-test 0)
+pico_enable_stdio_usb(rpi-pico-library-test 1)
 
 # Add the standard library to the build
 target_link_libraries(rpi-pico-library-test
-        pico_stdlib)
+        pico_stdlib
+        hardware_i2c
+        hardware_gpio
+        )
 
 # Add the standard include files to the build
 target_include_directories(rpi-pico-library-test PRIVATE
@@ -55,7 +62,8 @@ target_include_directories(rpi-pico-library-test PRIVATE
 
 # Add any user requested libraries
 target_link_libraries(rpi-pico-library-test 
-        
+        ssd1306
+        ds3231
         )
 
 pico_add_extra_outputs(rpi-pico-library-test)
